@@ -15,6 +15,18 @@ def print_squares(limit):
 
 
 """
+Problem #2
+https://www.hackerrank.com/challenges/list-comprehensions/problem
+"""
+
+
+def list_of_coordinates(x, y, z, n):
+    coordinates = [[a, b, c] for a in range(x+1) for b in range(y+1) for c in range(z+1) if a + b + c != n]
+    print(coordinates)
+
+
+
+"""
 Problem #3
 https://www.hackerrank.com/challenges/find-second-maximum-number-in-a-list/problem
 """
@@ -26,8 +38,8 @@ def print_runner_up(list_numbers):
 
 
 """
-  Problem #4
-  link: https://www.hackerrank.com/challenges/word-order/problem
+Problem #4
+https://www.hackerrank.com/challenges/word-order/problem
 """
 
 
@@ -48,4 +60,5 @@ def print_word_occ_order():
 if __name__ == '__main__':
     # print_squares(5)
     # print_runner_up([2, 3, 6, 6, 5])
-    print_word_occ_order()
+    # print_word_occ_order()
+    list_of_coordinates(1, 1, 1, 2)
