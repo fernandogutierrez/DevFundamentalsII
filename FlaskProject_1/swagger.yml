@@ -1,0 +1,271 @@
+swagger: "2.0"
+info:
+  description: "An API server to get the information of drivers and trucks"
+  version: "0.0.1"
+  title: "Trucks Company"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:5001"
+basePath: "/api/v1"
+tags:
+- name: "trucks"
+  description: "Information related to trucks"
+  externalDocs:
+    description: "Find out more"
+    url: "http://localhost:5001"
+- name: "drivers"
+  description: "Information related to drivers"
+schemes:
+- "http"
+paths:
+  /trucks:
+    get:
+      tags:
+      - "trucks"
+      summary: "Get a list of all trucks available"
+      description: "Get the list of all trucks available"
+      operationId: "truck_list"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                color:
+                  type: string
+                height:
+                  type: string
+                plate:
+                  type: string
+                type:
+                  type: string
+                volume:
+                  type: string
+        "500":
+          description: "Internal service error."
+    post:
+      tags:
+      - "trucks"
+      summary: "Save a given truck into a list"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a truck to place in the list"
+        required: true
+        schema:
+            type: "object"
+            properties:
+              id:
+                type: integer
+              color:
+                type: string
+              height:
+                type: string
+              plate:
+                type: string
+              type:
+                type: string
+              volume:
+                type: string
+      responses:
+        "200":
+          description: "The truck was saved."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+        "400":
+          description: "Invalid Truck"
+
+  /trucks/{truckId}:
+    get:
+      tags:
+      - "trucks"
+      summary: "Find a truck by ID"
+      description: "Returns a single truck"
+      operationId: "get_truck_by_id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "truckId"
+        in: "path"
+        description: "ID of truck to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: integer
+              color:
+                type: string
+              height:
+                type: string
+              plate:
+                type: string
+              type:
+                type: string
+              volume:
+                type: string
+        "404":
+          description: "Truck not found"
+    delete:
+      tags:
+      - "trucks"
+      summary: "Remove a truck given an id"
+      description: ""
+      operationId: "remove_truck"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "truckId"
+        in: "path"
+        description: "Truck id to remove"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "404":
+          description: "Truck not found"
+  /drivers:
+    get:
+      tags:
+      - "drivers"
+      summary: "Get a list of all drivers available"
+      description: "Get the list of all drivers available"
+      operationId: "driver_list"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                last_name:
+                  type: string
+                license_number:
+                  type: string
+                name:
+                  type: string
+                truck_id:
+                  type: integer
+        "500":
+          description: "Internal service error."
+    post:
+      tags:
+      - "drivers"
+      summary: "Save a given driver into a list"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "a driver to place in the list"
+        required: true
+        schema:
+            type: "object"
+            properties:
+                id:
+                  type: integer
+                last_name:
+                  type: string
+                license_number:
+                  type: string
+                name:
+                  type: string
+                truck_id:
+                  type: integer
+      responses:
+        "200":
+          description: "The driver was saved."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+        "400":
+          description: "Invalid Driver"
+
+  /drivers/{driverId}:
+    get:
+      tags:
+      - "drivers"
+      summary: "Find a driver by ID"
+      description: "Returns a single driver"
+      operationId: "get_driver_by_id"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "driverId"
+        in: "path"
+        description: "ID of driver to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+                id:
+                  type: integer
+                last_name:
+                  type: string
+                license_number:
+                  type: string
+                name:
+                  type: string
+                truck_id:
+                  type: integer
+        "404":
+          description: "Driver not found"
+    delete:
+      tags:
+      - "drivers"
+      summary: "Remove a driver given an id"
+      description: ""
+      operationId: "remove_driver"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "driverId"
+        in: "path"
+        description: "Driver id to remove"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "404":
+          description: "Driver not found"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
