@@ -1,6 +1,6 @@
 import pytest
 import json
-from truck_delivery_fernando.db_connector import DBConnector
+from truck_delivery_fernando.db_redis_connector import DBRedisConnector
 
 
 @pytest.fixture
@@ -11,8 +11,7 @@ def fixture_db_connector(mocker):
     mocker.patch("redis.Redis.get").return_value = json.dumps(object_to_save)
     mocker.patch("redis.Redis.mget").return_value = [json.dumps(obj) for obj in object_list]
     mocker.patch("redis.Redis.delete").return_value = 1
-    db_conn = DBConnector()
-    return db_conn
+    return DBRedisConnector()
 
 
 def test_save_mock(fixture_db_connector):
@@ -51,7 +50,7 @@ def test_get_by_id_mock_as_context_manager(mocker):
     mocker.patch("redis.Redis.get").return_value = json.dumps(object_to_save)
 
     result = None
-    with DBConnector() as db_connector:
+    with DBRedisConnector() as db_connector:
         db_connector.save(id_test, object_to_save)
         result = db_connector.get_by_id(id_test)
     assert result

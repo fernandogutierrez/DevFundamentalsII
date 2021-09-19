@@ -1,16 +1,16 @@
 from abc import ABCMeta, abstractmethod, ABC
 
 
-class ContentManager(metaclass=ABC):
+class ContentManager:
     def __init__(self):
         pass
 
     @abstractmethod
-    def save_document(self):
+    def save_document(self, object):
         pass
 
     @abstractmethod
-    def get_document(self):
+    def get_document(self, obj_id):
         pass
 
     @abstractmethod
@@ -18,5 +18,5 @@ class ContentManager(metaclass=ABC):
         pass
 
     @abstractmethod
-    def delete(self):
+    def delete(self, object_id):
         pass
