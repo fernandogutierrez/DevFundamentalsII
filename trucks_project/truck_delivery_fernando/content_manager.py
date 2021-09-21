@@ -1,12 +1,12 @@
 from abc import ABCMeta, abstractmethod, ABC
 
 
-class ContentManager:
+class ContentManager(metaclass=ABCMeta):
     def __init__(self):
         pass
 
     @abstractmethod
-    def save_document(self, object):
+    def save_document(self, id, object):
         pass
 
     @abstractmethod
