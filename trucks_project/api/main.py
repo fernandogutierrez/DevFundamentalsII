@@ -1,63 +1,48 @@
-from flask import Flask
-from flask import jsonify
-from flask import request
+import json
+from flask import Flask, request, jsonify, abort
+from api.util.random import generate_random_uuid
+from truck_delivery_fernando.client_manager import ClientManager
 
-books = [
-    {
-        'id': 0,
-        'title': 'A Fire Upon the Deep',
-        'author': 'Vernor Vinge',
-        'first_sentence': 'The coldsleep itself was dreamless.',
-        'year_published': '1992'
-    },
-    {
-        'id': 1,
-        'title': 'The Ones Who Walk Away From Omelas',
-        'author': 'Ursula K. Le Guin',
-        'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
-        'published': '1973'
-    },
-    {
-        'id': 2,
-        'title': 'Dhalgren',
-        'author': 'Samuel R. Delany',
-        'first_sentence': 'to wound the autumnal city.',
-        'published': '1975'
-    }
-]
-
-app = Flask(__name__)
+# from api.views import client_api
 
 API_NAME = "/api/v1"
+app = Flask(__name__)
 
 
-@app.route(f"{API_NAME}/books/<book_id>", methods=["GET"])
-def get_book(book_id):
-    #return jsonify(books[int(book_id)])
-    book_to_return = {}
-    for book in books:
-        if book.get("id") == int(book_id):
-            book_to_return = book
-            break
-    return jsonify(book_to_return)
+@app.route(f"{API_NAME}/client", methods=["POST"])
+def save_client():
+    client_params = json.dumps(request.json)
+    id = generate_random_uuid()
+    result = ClientManager().save_document(id, client_params)
+    return {"status": "Success", "id": id} if result else {"status": "Failed"}
 
 
+@app.route(f"{API_NAME}/clients", methods=["GET"])
+def get_all_clients():
+    result = ClientManager().get_all()
+    return jsonify(result)
 
 
-@app.route(f"{API_NAME}/books", methods=["GET"])
-def list_books():
-    return jsonify(books)
+@app.route(f"{API_NAME}/client/<client_id>", methods=["GET"])
+def get_client_by_id(client_id):
+    result = ClientManager().get_document(client_id)
+    if result == '{}':
+        abort(404, "Client not found!.")
+    return jsonify(result)
 
 
-@app.route("/", methods=["GET"])
-def hello():
-    return "hello World!"
+@app.route(f"{API_NAME}/client/<client_id>", methods=["DELETE"])
+def delete_client_by_id(client_id):
+    result = ClientManager().delete(client_id)
+    if result == 0:
+        abort(404, "Client not found!.")
+    return {"status": "Success", "message": f"Client id [ {client_id} ] deleted from DB."}
 
 
-@app.errorhandler(404)
-def resource_not_found(e):
-    return jsonify(err=str(e)), 400
-
+# app.add_url_rule("/clients", view_func=client_api.get_all_clients)
+# app.add_url_rule("/clients", view_func=client_api.save_client, methods=["POST"])
+# app.add_url_rule("/client/<client_id>", view_func=client_api.get_client_by_id)
+# app.add_url_rule("/client/<client_id>", view_func=client_api.delete_client_by_id, methods=["DELETE"])
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=5000, use_reloader=True)
