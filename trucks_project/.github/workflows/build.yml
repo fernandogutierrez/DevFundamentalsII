@@ -27,5 +27,5 @@ jobs:
          pip install -r dev_requirements.txt
          pip install coveralls
          pip install pytest
-      - name: Run tests
+      - name: Run tests test
         run: pytest trucks_project/tests
