@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, Response
 from api.util.random import generate_random_uuid
 from truck_delivery_fernando.client_manager import ClientManager
 
@@ -7,28 +7,34 @@ API_NAME = "/api/v1"
 app = Flask(__name__)
 
 
+@app.errorhandler(404)
+def resource_not_found(e):
+    return jsonify(error=str(e)), 404
+
+
 @app.route(f"{API_NAME}/client", methods=["POST"])
 def save_client():
-    client_params = json.dumps(request.json)
     id = generate_random_uuid()
-    result = ClientManager().save_document(id, client_params)
+    request.json['id'] = id
+    client_params = json.dumps(request.json)
+    result, data_saved = ClientManager().save_document(id, client_params)
     if not result:
         abort(400, "Bad Request, please review the parameters sent.")
-    return {"status": "Success", "id": id}
+    return Response(data_saved, mimetype='application/json')
 
 
 @app.route(f"{API_NAME}/clients", methods=["GET"])
 def get_all_clients():
     result = ClientManager().get_all()
-    return jsonify(result)
+    return Response(result, mimetype='application/json')
 
 
 @app.route(f"{API_NAME}/client/<client_id>", methods=["GET"])
 def get_client_by_id(client_id):
     result = ClientManager().get_document(client_id)
     if result == '{}':
-        abort(404, "Client not found!.")
-    return jsonify(result)
+        abort(404, "Given Client ID does not exist.")
+    return Response(result, mimetype='application/json')
 
 
 @app.route(f"{API_NAME}/client/<client_id>", methods=["DELETE"])

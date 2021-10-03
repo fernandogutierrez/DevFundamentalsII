@@ -1,6 +1,8 @@
-import redis
 import json
+
+import redis
 from redis import TimeoutError, ConnectionError
+
 from truck_delivery_fernando.db_connector import DBConnector
 from truck_delivery_fernando.util.json import validate_json
 
@@ -24,7 +26,7 @@ class DBRedisConnector(DBConnector):
     def save(self, id_save, object_to_save):
         encode_data = json.dumps(object_to_save)
         result_save = self.connection.set(id_save, encode_data)
-        return result_save
+        return result_save, json.loads(encode_data)
 
     def get_by_id(self, id):
         result_get = self.connection.get(id)

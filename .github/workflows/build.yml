@@ -28,7 +28,7 @@ jobs:
           pip install coveralls
           pip install pytest
       - name: Run tests test
-        run: pytest trucks_project/tests
+        run: pytest truck_delivery_fernando/tests
 
   release:
     name: Release

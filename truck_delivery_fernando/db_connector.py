@@ -1,7 +1,7 @@
-from abc import ABCMeta, abstractmethod, ABC
+from abc import ABCMeta, abstractmethod
 
 
-class DBConnector:
+class DBConnector(metaclass=ABCMeta):
     def __init__(self):
         """"""
 
